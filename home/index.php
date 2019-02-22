@@ -1,5 +1,7 @@
 <?php
 	include("dbh.php");
+
+echo "test";
 	
 	if(isset($_POST["signup"])){
 		
@@ -23,6 +25,7 @@
 			header("location:index.php?emptyinputs");
 		}
 	}
+	
 
 ?>
 <!DOCTYPE html>
@@ -179,6 +182,9 @@ $("#backBtn").click(()=>{
 	$("#loginpage").show();
 	$("#signuppage").hide();
 });	
+
+console.log("test");
+
 
 </script>
 
