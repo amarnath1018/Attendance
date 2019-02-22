@@ -22,7 +22,6 @@
 		}else{
 			header("location:index.php?emptyinputs");
 		}
-	
 	}
 
 ?>
