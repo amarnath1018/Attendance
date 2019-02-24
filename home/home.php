@@ -1,6 +1,10 @@
 <?php
-	include("header.php");
-	include("dbh.php");
+	session_start();
+	if( isset($_SESSION["id"]) ){
+?>
+
+<?php
+	include("..\layout\header.php");
 	
 	if(isset($_POST["save"])){
 		$title = mysqli_real_escape_string($conn,$_POST["Title"]);
@@ -38,10 +42,10 @@
 								if( mysqli_num_rows($result) > 0 ){
 									while( $row=mysqli_fetch_assoc($result) ){
 										echo '<div class="border-bottom mb-3">
-												<button action="editTitle.php" class="btn btn-primary btn-sm float-right ml-2">
+												<a href="..\edit\editTitle.php?edit='.$row["id"].'" name="edit" id="editTitle" class="btn btn-primary btn-sm float-right ml-2">
 													<li class="far fa-edit"></li>
 												</button>
-												<a href="deleteTitle.php?delete='.$row["id"].'"  name="delete" class="btn btn-danger btn-sm float-right">
+												<a href="..\delete\deleteTitle.php?delete='.$row["id"].'"  name="delete" class="btn btn-danger btn-sm float-right">
 													<li class="far fa-trash-alt"></li>
 												</a>
 												<b>'.$row["title"].'</b><br/>
@@ -85,13 +89,17 @@
 		</div>
 	</body>
 	
-<script src="jquery.js"></script>
+<script src="..\js\jquery.js"></script>
 <script>
 	$("#addTitle").hide();
 	$("#backBtn").click(()=>{
 		$("#titleList").show();
 		$("#addTitle").hide();
 		
+	});
+	$("#editTitle").click(()=>{
+		$("#titleList").hide();
+		$("#addTitle").show();
 	});
 	
 	$("#addTitletBtn").click(()=>{
@@ -126,7 +134,7 @@
 										+ '<div class="input-group-prepend">'
 											+ '<span class="input-group-text"><li class="'+ field[i].icon+'"></li></span>'
 										+ '</div>'
-										+ '<input class="form-control" type="'+ field[i].type +'" name="'+ field[i].name +'" placeholder="'+ field[i].Placeholder +'" required>'
+										+ '<input class="form-control" type="'+ field[i].type +'" name="'+ field[i].name +'" placeholder="'+ field[i].Placeholder +'" >'
 									+ '</div>'
 								+ '</div>'
 				}
@@ -137,7 +145,7 @@
 										+ '<div class="input-group-prepend">'
 											+ '<span class="input-group-text"><li class="'+ field[i].icon+'"></li></span>'
 										+ '</div>'
-										+ '<textarea class="form-control" type="'+ field[i].type +'" name="'+ field[i].name +'" placeholder="'+ field[i].Placeholder+'" required>'
+										+ '<textarea class="form-control" type="'+ field[i].type +'" name="'+ field[i].name +'" placeholder="'+ field[i].Placeholder+'">'
 										+ '</textarea>'
 									+ '</div>'
 								+ '</div>'
@@ -148,27 +156,8 @@
 		
 	});
 
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
 </html>
+<?php	
+			}
+?>

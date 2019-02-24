@@ -1,18 +1,17 @@
 <?php
 
-	include("dbh.php");
-	//session_start();
+	session_start();
+	include("..\database\database.php");
 
 	if( isset($_POST["login"])) {
 		$user = mysqli_real_escape_string($conn,$_POST["username"]);
 		$pwd = mysqli_real_escape_string($conn,$_POST["pwd"]);
 
-		/* echo $user; */
-		/* exit(); */
+		/* echo $user; 
+		 exit(); */
 
 		if( !empty($user) && !empty($pwd)){
 			$sql = "SELECT * FROM admin WHERE username = '$user'";			
-
 			$result = mysqli_query($conn, $sql);			
 			$row = mysqli_num_rows($result);
 

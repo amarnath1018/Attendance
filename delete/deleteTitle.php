@@ -1,5 +1,5 @@
 <?php
-	include("dbh.php");
+	include("..\database\database.php");
 	
 
 	if(isset($_GET["delete"])){
@@ -8,8 +8,7 @@
 		$result = mysqli_query($conn,$sql);
 		
 		
-		header("location:home.php?cmd=deleted");
-		echo "Delete";
+		header("location:..\home\home.php?cmd=deleted");
 		// exit();
 	}
 ?>

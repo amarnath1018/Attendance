@@ -1,16 +1,21 @@
 <?php
-
-	include_once("dbh.php");
-	include("header.php");
+	session_start();
+	if( isset($_SESSION["id"])){
+?>
+<?php
+	
+	include("..\layout\header.php");
 	
 	if(isset($_POST["save"])){
-		$username = mysqli_real_escape_string($conn,$_POST["user"]);
-		$userRole = mysqli_real_escape_string($conn,$_POST["userRole"]);
-		$mail = mysqli_real_escape_string($conn,$_POST["mail"]);
 		$first = mysqli_real_escape_string($conn,$_POST["first"]);
 		$last = mysqli_real_escape_string($conn,$_POST["last"]);
-		$mob = mysqli_real_escape_string($conn,$_POST["mobile"]);
+		$username = mysqli_real_escape_string($conn,$_POST["user"]);
+		$userRole = mysqli_real_escape_string($conn,$_POST["userRole"]);
+		$empId = mysqli_real_escape_string($conn,$_POST["employeeId"]);
 		$status = mysqli_real_escape_string($conn,$_POST["status"]);
+		$officialMail = mysqli_real_escape_string($conn,$_POST["officialMail"]);
+		$mob = mysqli_real_escape_string($conn,$_POST["mobile"]);
+		$personalMail = mysqli_real_escape_string($conn,$_POST["personalMail"]);
 		$dob = mysqli_real_escape_string($conn,$_POST["dob"]);
 		$add1 = mysqli_real_escape_string($conn,$_POST["address1"]);
 		$add2 = mysqli_real_escape_string($conn,$_POST["address2"]);
@@ -20,13 +25,17 @@
 		$currentDate = date("d-m-Y");
 		
 		
+		// print_r($mob);
+		// exit();
 		
-		if( !empty($username) && !empty($userRole) && !empty($mail) && !empty($first) && !empty($last) && !empty($mob) && !empty($status) ){
-			if(filter_var($mail,FILTER_VALIDATE_EMAIL)){
+		if( !empty($username) && !empty($userRole) && !empty($officialMail) &&!empty($personalMail) && !empty($first) && !empty($last) && !empty($mob) && !empty($status) ){
+			if( filter_var($officialMail,FILTER_VALIDATE_EMAIL) && filter_var($personalMail,FILTER_VALIDATE_EMAIL) ){
 				if( preg_match("/^[a-zA-Z]*$/",$username) && preg_match("/^[a-zA-Z]*$/",$first) && preg_match("/^[a-zA-Z]*$/",$last)){
 					if( preg_match("/^[0-9]{10}+$/",$mob)){
-						$sql = "INSERT INTO data(empName,empRole,empMail,empFn,empLn,empMob,empStatus,empDob,empAddress1,empAddress2,empArea,empCountry,empPincode,date) 
-									VALUES('$username','$userRole','$mail','$first','$last','$mob','$status','$dob','$add1','$add2','$area','$country','$pincode','$currentDate');";
+						$sql = "INSERT INTO data(empFn,empLn,empName,empRole,empId,empStatus,empOfficialmail,empMob,empPersonalmail,
+														empDob,empAddress1,empAddress2,empArea,empCountry,empPincode,date) 
+											VALUES('$first','$last','$username','$userRole','$empId','$status','$officialMail','$mob','$personalMail',
+													'$dob','$add1','$add2','$area','$country','$pincode','$currentDate');";
 						$result= mysqli_query($conn,$sql);
 						
 						header("Refresh:0");
@@ -82,49 +91,26 @@
 										$resultCheck = mysqli_num_rows($result);
 										if( $resultCheck > 0 ){
 											while($row = mysqli_fetch_assoc($result)){
-												if( $row["empStatus"] == 'Active'){
-													echo '<tr>
-															<td>'.$row["id"].'</td>
-															<td>
-																<b>'.$row["empFn"].' '.$row["empLn"].'</b><br/>
-																<small>'.$row["empMail"].'</small><br/>
-																<small>'.$row["empMob"].'</small>
-															</td>
-															<td>'.$row["empName"].'</td>
-															<td>'.$row["empRole"].'</td>
-															<td><button class="btn btn-success btn-sm">'.$row["empStatus"].'</button></td>
-															<td>'.$row["date"].'</td>
-															<td>
-																<button class="btn btn-primary btn-sm">
-																	<li class="far fa-edit"></li>
-																</button>'.' '.'
-																<button class="btn btn-danger btn-sm">
-																	<li class="far fa-trash-alt"></li>
-																</button>
-															</td>
-														</tr>';
-												}else{
-													echo '<tr>
-															<td>'.$row["id"].'</td>
-															<td>
-																<b>'.$row["empFn"].' '.$row["empLn"].'</b><br/>
-																<small>'.$row["empMail"].'</small><br/>
-																<small>'.$row["empMob"].'</small>
-															</td>
-															<td>'.$row["empName"].'</td>
-															<td>'.$row["empRole"].'</td>
-															<td><button class="btn btn-danger btn-sm">'.$row["empStatus"].'</button></td>
-															<td>'.$row["date"].'</td>
-															<td>
-																<button class="btn btn-primary btn-sm">
-																	<li class="far fa-edit"></li>
-																</button>'.' '.'
-																<button class="btn btn-danger btn-sm">
-																	<li class="far fa-trash-alt"></li>
-																</button>
-															</td>
-														</tr>';
-												}
+												echo '<tr>
+														<td>'.$row["id"].'</td>
+														<td>
+															<b>'.$row["empFn"].' '.$row["empLn"].'</b><br/>
+															<small>'.$row["empOfficialmail"].'</small><br/>
+															<small>'.$row["empMob"].'</small>
+														</td>
+														<td>'.$row["empName"].'</td>
+														<td>'.$row["empRole"].'</td>
+														<td><button class="btn btn-success btn-sm">'.$row["empStatus"].'</button></td>
+														<td>'.$row["date"].'</td>
+														<td>
+															<button class="btn btn-primary btn-sm">
+																<li class="far fa-edit"></li>
+															</button>'.' '.'
+															<a href="..\delete\deleteUser.php?delete='.$row["id"].'" name="delete" class="btn btn-danger btn-sm">
+																<li class="far fa-trash-alt"></li>
+															</a>
+														</td>
+													</tr>';
 											}
 										}
 //exit();
@@ -167,9 +153,10 @@
 				</div>
 			</div>
 		</div>
+		
 	</body>
 	
-<script src="jquery.js"></script>
+<script src="..\js\jquery.js"></script>
 <script>
 	$("#adduser").hide();
 		
@@ -186,12 +173,27 @@
 		var field = [
 						{
 							"class" : "col-md-3 mb-3",
+							"headline" : "First Name",
+							"icon" : "far fa-user",
+							"type" :"text",
+							"name" : "first",
+							"placeholder" : "First Name"
+						},
+						{
+							"class" : "col-md-3",
+							"headline" : "Last Name",
+							"icon" : "far fa-user",
+							"type" :"text",
+							"name" : "last",
+							"placeholder" : "Last Name"
+						},
+						{
+							"class" : "col-md-3 mb-3",
 							"headline" : "Username",
 							"icon" : "far fa-user",
 							"type" :"text",
 							"name" : "user",
-							"placeholder" : "Username",
-							"id" : "user"
+							"placeholder" : "Username"
 						},
 						{
 							"class" : "col-md-3",
@@ -200,7 +202,6 @@
 							"type" :"select",
 							"name" : "userRole",
 							"placeholder" : "",
-							"id" : "uRole",
 							"option" : [{
 											'label' : 'Admin',
 											'value' : 'Admin' 
@@ -210,48 +211,19 @@
 										}]
 						},
 						{
-							"class" : "col-md-6",
-							"headline" : "E-mail Address",
-							"icon" : "far fa-envelope",
+							"class" : "col-md-3 mb-3",
+							"headline" : "Employee ID",
+							"icon" : "far fa-user",
 							"type" :"text",
-							"name" : "mail",
-							"placeholder" : "E-mail Address",
-							"id" : "uMail"
+							"name" : "employeeId",
+							"placeholder" : "ID"
 						},
 						{
 							"class" : "col-md-3 mb-3",
-							"headline" : "First Name",
-							"icon" : "far fa-user",
-							"type" :"text",
-							"name" : "first",
-							"placeholder" : "First Name",
-							"id" : "uFirst"
-						},
-						{
-							"class" : "col-md-3",
-							"headline" : "Last Name",
-							"icon" : "far fa-user",
-							"type" :"text",
-							"name" : "last",
-							"placeholder" : "Last Name",
-							"id" : "uLast"
-						},
-						{
-							"class" : "col-md-6",
-							"headline" : "Mobile Number",
-							"icon" : "fas fa-phone",
-							"type" :"text",
-							"name" : "mobile",
-							"placeholder" : "Mobile Number",
-							"id" : "uMob"
-						},
-						{
-							"class" : "col-md-6 mb-3",
 							"headline" : "Status",
 							"icon" : "far fa-check-circle",
 							"type" :"select",
 							"name" : "status",
-							"id" : "uStatus",
 							"option" : [{
 								'label' : 'Active',
 								'value' : 'Active' 
@@ -259,6 +231,31 @@
 								'label' : 'InActive',
 								'value' : 'Inactive' 
 							}]
+						},
+						{
+							"class" : "col-md-6",
+							"headline" : "Official E-mail Address",
+							"icon" : "far fa-envelope",
+							"type" :"text",
+							"name" : "officialMail",
+							"placeholder" : "E-mail Address"
+						},
+						{
+							"class" : "col-md-6",
+							"headline" : "Mobile Number",
+							"icon" : "fas fa-phone",
+							"type" :"text",
+							"name" : "mobile",
+							"placeholder" : "Mobile Number"
+						},
+						
+						{
+							"class" : "col-md-6",
+							"headline" : "Personal E-mail Address",
+							"icon" : "far fa-envelope",
+							"type" :"text",
+							"name" : "personalMail",
+							"placeholder" : "E-mail Address"
 						}
 					];
 					
@@ -269,8 +266,7 @@
 							"icon" : "fas fa-calendar-alt",
 							"type" :"date",
 							"name" : "dob",
-							"placeholder" : "",
-							"id" : "uDob"
+							"placeholder" : ""
 							
 						},
 						{
@@ -279,8 +275,7 @@
 							"icon" : "far fa-address-card",
 							"type" :"text",
 							"name" : "address1",
-							"placeholder" : "Address Line1",
-							"id" : "uAddress1"
+							"placeholder" : "Address Line1"
 						},
 						{
 							"class" : "col-md-6 mb-3",
@@ -288,8 +283,7 @@
 							"icon" : "far fa-address-card",
 							"type" :"text",
 							"name" : "address2",
-							"placeholder" : "Address Line2",
-							"id" : "uAddress2"
+							"placeholder" : "Address Line2"
 						},
 						{
 							"class" : "col-md-3",
@@ -297,8 +291,7 @@
 							"icon" : "fas fa-map-marker-alt",
 							"type" :"text",
 							"name" : "area",
-							"placeholder" : "Area or City",
-							"id" : "uArea"
+							"placeholder" : "Area or City"
 						},
 						{
 							"class" : "col-md-3",
@@ -306,8 +299,7 @@
 							"icon" : "fas fa-globe",
 							"type" :"text",
 							"name" : "country",
-							"placeholder" : "Country",
-							"id" : "uCountry"
+							"placeholder" : "Country"
 						},
 						{
 							"class" : "col-md-6 mb-3",
@@ -315,8 +307,7 @@
 							"icon" : "fas fa-map-marked",
 							"type" :"text",
 							"name" : "pin",
-							"placeholder" : "Pincode",
-							"id" : "uPincode"
+							"placeholder" : "Pincode"
 						}
 					]; 
 					
@@ -332,7 +323,7 @@
 											+ '<span class="input-group-text "><li class="'+field[i].icon+'"></span>'
 										+ '</div>'
 										+ '<input class="form-control" id="'+field[i].id+'" type="'+field[i].type+'" name="'+field[i].name
-												+'" Placeholder="'+field[i].placeholder+'" required>'
+												+'" Placeholder="'+field[i].placeholder+'">'
 									+ '</div>'
 								+ '</div>'	
 							+ '</div>'
@@ -367,7 +358,7 @@
 		   var secondaryDetail = "";
 		for(var i=0; i < field2.length; i++){
 			secondaryDetail += 	'<div class="'+field2[i].class+'">' 
-							+ '<h6 class="text-muted">'+field2[i].headline+'</h6>'
+							+ '<h6>'+field2[i].headline+'</h6>'
 							+ '<div class="form-group">'
 								+ '<div class="input-group">'
 									+ '<div class="input-group-prepend">'
@@ -416,3 +407,6 @@
 	
 </script>
 </html>
+<?php
+				}
+		?>

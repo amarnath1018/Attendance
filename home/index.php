@@ -1,7 +1,5 @@
 <?php
-	include("dbh.php");
-
-echo "test";
+	include("..\database\database.php");
 	
 	if(isset($_POST["signup"])){
 		
@@ -21,8 +19,8 @@ echo "test";
 			}else{
 				header("location:index.php?invalidchar");
 			}
-		}else{
-			header("location:index.php?emptyinputs");
+		}else{			
+			header("location:index.php?cmd=emptyinputs");
 		}
 	}
 	
@@ -41,12 +39,12 @@ echo "test";
 		<div class="container-fluid bg-dark" style="height:calc(100vh)">
 			<div class="row p-5">
 				<div class="col-md-5 col-sm-5 m-auto p-3 bg-light border rounded " id="loginpage">
-					<form action="usercheck.php" method="post">
+					<form action="logincheck.php" method="post">
 						<div id="login_input">
 						
 						</div>
 						<button name="login" class="btn btn-lg btn-block bg-light text-dark border mt-4"  value="login" type="submit" >
-							<li class="fas fa-user-plus mr-3"></li>Login
+							<li class="fas fa-user-plus mr-3 "></li>Login
 						</button>
 					</form>
 					<div class=" my-3 ">
@@ -72,7 +70,7 @@ echo "test";
 	
 	
 	
-<script src="jquery.js"></script>
+<script src="..\js\jquery.js"></script>
 <script>
 	
 	var field = [	
@@ -106,7 +104,7 @@ echo "test";
 								+ '<span class="input-group-text"><li class="'+ field[i].icon+'"></li></span>'
 							+ '</div>'
 							+ '<input type="'+ field[i].type +'" class="form-control" name="'+ field[i].name +'" placeholder="'
-											+ field[i].placeholder +'"id="'+field[i].id+'" required>'
+											+ field[i].placeholder +'"id="'+field[i].id+'" >'
 						+ '</div>'
 					+ '</div>'
 				'</div>'
@@ -167,7 +165,7 @@ echo "test";
 										+ '<span class="input-group-text"><li class="'+ signupField[i].icon+'"></li></span>'
 									+ '</div>'
 									+ '<input type="'+ signupField[i].type +'" class="form-control" name="'+ signupField[i].name +'" placeholder="'
-													+ signupField[i].placeholder +'"id="'+signupField[i].id+'" required>'
+													+ signupField[i].placeholder +'"id="'+signupField[i].id+'">'
 								+ '</div>'
 							+ '</div>'
 						'</div>'

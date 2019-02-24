@@ -1,6 +1,9 @@
 <?php
-	include("dbh.php");
-	include("header.php");
+	session_start();
+	if( isset($_SESSION["id"]) ){
+?>
+<?php
+	include("..\layout\header.php");
 	
 	if(isset($_POST["saveTcktBtn"])){
 		$sub = mysqli_real_escape_string($conn,$_POST["subject"]);
@@ -10,24 +13,25 @@
 		$mob = mysqli_real_escape_string($conn,$_POST["mob"]);
 		$dept = mysqli_real_escape_string($conn,$_POST["dept"]);
 		$priority = mysqli_real_escape_string($conn,$_POST["priority"]);
-		// $status = mysqli_real_escape_string($conn,$_POST["status"]);
-		$date = date( "d-m-Y" );		
+		$date = date("d-m-Y");
+
+		if(isset($_POST["status"])){
+			$status = mysqli_real_escape_string($conn,$_POST["status"]);			
+		}else{
+			$status = "";
+		}
+		
 		
 		if( !empty($sub) && !empty($name) && !empty($mail) && !empty($mob) && !empty($dept) && !empty($priority) ){
 			if( preg_match("/^[a-zA-Z]*$/",$name) && preg_match("/^[a-zA-Z]*$/",$sub) ){
 				if( filter_var($mail,FILTER_VALIDATE_EMAIL) ){
 					if( preg_match("/^[0-9]{10}+$/",$mob) ){
 						
-						
-						exit();
-						
-						
 						$sql = "INSERT INTO ticketinfo(subject,reply,name,mail,mob,dept,priority,status,date)
 										VALUES('$sub','$reply','$name','$mail','$mob','$dept','$priority','$status','$date');";
 						
 						$result = mysqli_query($conn,$sql);
-						
-						
+						header("Refresh:0");
 						
 					}else{
 						header("location:ticket.php?invalidMob");
@@ -42,120 +46,111 @@
 			header("location:ticket.php?emptyinput");
 		}
 		
-		print_r();
-		exit();
 	}
 	
 	
 ?>
 
 
-			<div class="col-md-10 bg-light p-3" style="height:calc(100vh);overflow:scroll;">
-				<div class="bg-white" id="ticketList">
-					<div class="p-3 border-bottom">
-						<header>
-							<div>
-								<button class="btn btn-success btn-sm float-right" id="addTcktBtn">
-									<li class="fas fa-plus-circle mr-2"></li>New Tickets
-								</button>
-								<h5 class="text-muted"><li class="fas fa-ticket-alt mr-3"></li>Tickets</h5>
-							</div>
-						</header>
-					</div>
-					<div class="" id="">
-						<?php
-							$sql = "SELECT * FROM ticketinfo";
-							$result = mysqli_query($conn,$sql);
-							if( mysqli_num_rows($result) > 0 ){
-								while( $row = mysqli_fetch_assoc($resut) ){
-									echo '<div class="border">
-											<div class="row border-bottom">
-												<p>#'.$row["id"].'</p>
-												<small class="float-right">created Date'.$row["date"].'</small>
-											</div>
-											<div class="row">
-												<div class="col-md-4">
-													<img src="" >
-													<b>'.$row["name"].'</b>
+					
+					<div class="bg-white" id="ticketList">
+						<div class="p-3 border-bottom">
+							<header>
+								<div>
+									<button class="btn btn-success btn-sm float-right" id="addTcktBtn">
+										<li class="fas fa-plus-circle mr-2"></li>New Tickets
+									</button>
+									<h5 class="text-muted"><li class="fas fa-ticket-alt mr-3"></li>Tickets</h5>
+								</div>
+							</header>
+						</div>
+						<div class="" id="">
+							<?php
+								$sql = "SELECT * FROM ticketinfo";
+								$result = mysqli_query($conn,$sql);
+								if( mysqli_num_rows($result) > 0 ){
+									while( $row = mysqli_fetch_assoc($result) ){
+
+										echo '<div class="card">
+												<div class="row card-hdr">
+													<div class="col-md-4 card-left">
+														<span>#3</span>
+													</div>
+													<div class="col-md-8 card-right">
+														<span>Date 21-12-2019</span>
+													</div>
+												<div>
+												<div class="row card-body">
+													<div class="col-md-6 flex">
+														<div class="card-img">
+															<li class="far fa-user"></li>
+														</div>
+														<div class="card-text">
+															<span>Amarnath</span><br>
+															<span>Amarnath</span><br>
+															<span>Amarnath</span><br>
+														</div>
+													</div>
+													<div class="col-md-6">
+													</div>
+													</div>
 												</div>
-												<div class="col-md-4 offset-4">
-													
-												</div>
-											</div>
-										</div>';
+											</div>';
+									}
 								}
-							}
-						?>
+							?>
+						</div>
 					</div>
+					<form action="ticket.php" method="post" >
+						<div class="row " id="addTicket">
+							<div class="col-md-8 px-2 ">
+								<div class="bg-white border">
+									<div class=" p-3 border-bottom">
+										<header>
+											<div>
+												<button class="btn btn-secondary btn-sm float-right ml-2" type="button" id="backBtn">
+													<li class="fas fa-angle-left"></li>
+												</button>
+												<button class="btn btn-success btn-sm float-right " type="button">
+													<li class="far fa-file"></li>
+												</button>
+												<h5 class="text-muted"><li class="far fa-smile mr-3"></li>New Tickets</h5>
+											</div>
+										</header>
+									</div>
+									<div class="p-3 border-bottom" id="ticInputs">
+									
+									</div>
+									<div class="p-2 ">
+										<footer>
+											<button class="btn btn-success" name="saveTcktBtn" type="submit">Save</button>
+										</footer>
+									</div> 
+								</div>
+							</div>
+							<div class="col-md-4 px-2">
+								<div class="bg-white border">
+									<div class=" p-3 border-bottom">
+										<header>
+											<div>
+												<h5 class="text-muted"><li class="far fa-smile mr-3"></li>Ticket Info</h5>
+											</div>
+										</header>
+									</div>
+									<div class="p-3" id="ticInfo">
+									
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
 				</div>
-				<form action="ticket.php" method="post" >
-					<div class="row " id="addTicket">
-						<div class="col-md-8 px-2 ">
-							<div class="bg-white border">
-								<div class=" p-3 border-bottom">
-									<header>
-										<div>
-											<button class="btn btn-secondary btn-sm float-right ml-2" type="button" id="backBtn">
-												<li class="fas fa-angle-left"></li>
-											</button>
-											<button class="btn btn-success btn-sm float-right " type="button">
-												<li class="far fa-file"></li>
-											</button>
-											<h5 class="text-muted"><li class="far fa-smile mr-3"></li>New Tickets</h5>
-										</div>
-									</header>
-								</div>
-								<div class="p-3 border-bottom" id="ticInputs">
-								
-								</div>
-								<div class="p-2 ">
-									<footer>
-										<button class="btn btn-success" name="saveTcktBtn" type="submit">Save</button>
-									</footer>
-								</div> 
-							</div>
-						</div>
-						<div class="col-md-4 px-2">
-							<div class="bg-white border">
-								<div class=" p-3 border-bottom">
-									<header>
-										<div>
-											<h5 class="text-muted"><li class="far fa-smile mr-3"></li>Ticket Info</h5>
-										</div>
-									</header>
-								</div>
-								<div class="p-3" id="ticInfo">
-								
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			</div>
 		</div>
 	</body>	
 	
-<script src="jquery.js"></script>
+<script src="..\js\jquery.js"></script>
 <script>
 	$("#addTicket").hide();
 	
@@ -198,7 +193,7 @@
 							"type" : "checkbox",
 							"icon" : "",
 							"placeholder" : "",
-							"name" : "status[]",
+							"name" : "status",
 							"value" : "close on reply"
 							
 						}
@@ -215,7 +210,7 @@
 								+ '<div class="input-group-prepend">'
 									+ '<span class="input-group-text"><li class="'+field[i].icon+'"></li></span>'
 								+ '</div>'
-								+ '<input type="'+ field[i].type+'" class="form-control" name="'+field[i].name+'" placeholder="'+field[i].placeholder+'" required>'
+								+ '<input type="'+ field[i].type+'" class="form-control" name="'+field[i].name+'" placeholder="'+field[i].placeholder+'">'
 							+ '</div>'
 						+ '</div>'
 					+ '</div>'
@@ -331,7 +326,7 @@
 									+ '<div class="input-group-prepend">'
 										+ '<span class="input-group-text "><li class="'+infoField[i].icon+'"></span>'
 									+ '</div>'
-									+ '<input class="form-control" type="'+infoField[i].type+'" name="'+infoField[i].name+'" Placeholder="'+infoField[i].placeholder+'" required>'
+									+ '<input class="form-control" type="'+infoField[i].type+'" name="'+infoField[i].name+'" Placeholder="'+infoField[i].placeholder+'">'
 								+ '</div>'
 							+ '</div>'	
 						+ '</div>'
@@ -361,16 +356,10 @@
 					
 	$("#ticInfo").html(infoData);
 });	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 </script>
 </html>
+
+<?php
+				}
+		?>

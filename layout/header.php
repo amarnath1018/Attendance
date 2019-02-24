@@ -1,4 +1,6 @@
-
+<?
+	include("..\database\database.php");
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -9,23 +11,23 @@
 		
 	</head>
 	<body>
-		<nav class="nav p-3 justify-content-end border">
-			<li class="nav-item">
-				<a class="nav-link " href="#"><li class="fas fa-cog "></li></a>
+		<div class="nav p-3 justify-content-end border">
+			<li class="nav-item ">
+				<a class="nav-link fas fa-cog " href="#"></a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#"><li class="fas fa-user-check "></li></a>
+				<a class="nav-link fas fa-user-check" href="..\home\logout.php"></a>
 			</li>
-		</nav>
+		</div>
 		
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-2 border bg-dark">
 					<div id="list-example" class="list-group mt-3">
-					  <a class="list-group-item list-group-item-action" href="home.php">Home</a>
-					  <a class="list-group-item list-group-item-action" href="user.php">User</a>
-					  <a class="list-group-item list-group-item-action" href="userRole.php">User Role</a>
-					  <a class="list-group-item list-group-item-action" href="ticket.php">Ticket</a>
+					  <a class="list-group-item list-group-item-action" href="..\home\home.php">Home</a>
+					  <a class="list-group-item list-group-item-action" href="..\user\user.php">User</a>
+					  <a class="list-group-item list-group-item-action" href="..\userrole\userrole.php">User Role</a>
+					  <a class="list-group-item list-group-item-action" href="..\ticket\ticket.php">Ticket</a>
 					</div>
 				</div>
 		

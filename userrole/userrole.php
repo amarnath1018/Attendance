@@ -1,7 +1,11 @@
 <?php
+	session_start();
+	if( isset($_SESSION["id"])){
+?>
 
-	include("dbh.php");
-	include("header.php");
+<?php
+	
+	include("..\layout\header.php");
 
 	if(isset($_POST["saveRoleBtn"])){
 		$role = mysqli_real_escape_string($conn,$_POST["role"]);
@@ -14,10 +18,10 @@
 				$result = mysqli_query($conn,$sql);
 				header("Refresh:0");
 			}else{
-				header ("location:userRole.php?save=invalidformat");
+				header ("location:userrole.php?save=invalidformat");
 			}
 		}else{
-			header ("location:userRole.php?save=emptyinput");
+			header ("location:userrole.php?save=emptyinput");
 		}
 		
 		
@@ -65,9 +69,9 @@
 															<button class="btn btn-primary btn-sm">
 																<li class="far fa-edit"></li>
 															</button>'.' '.'
-															<button class="btn btn-danger btn-sm">
+															<a href="..\delete\deleteUserrole.php?delete='.$row["id"].'" name="delete" class="btn btn-danger btn-sm">
 																<li class="far fa-trash-alt"></li>
-															</button>
+															</a>
 														</td>
 													</tr>';
 											}
@@ -122,9 +126,10 @@
 				</div>
 			</div>
 		</div>
+		
 	</body>
 
-<script src="jquery.js"></script>
+<script src="..\js\jquery.js"></script>
 <script>
 	$("#addRole").hide();
 	
@@ -166,7 +171,7 @@
 										+ '<li class="'+field[i].icon+'"></li>'
 									+ '</span>'
 								+'</div>'
-								+'<input class="form-control" name="'+field[i].name+'" type="'+field[i].type+'" required>'
+								+'<input class="form-control" name="'+field[i].name+'" type="'+field[i].type+'" >'
 							+'</div>'
 						+'</div>';
 			}
@@ -179,7 +184,7 @@
 										+ '<li class="'+field[i].icon+'"></li>'
 									+ '</span>'
 								+'</div>'
-								+'<textarea class="form-control" rows="5" name="'+field[i].name+'" type="'+field[i].type+'" required></textarea>'
+								+'<textarea class="form-control" rows="5" name="'+field[i].name+'" type="'+field[i].type+'" ></textarea>'
 							+'</div>'
 						+'</div>';
 			}
@@ -395,12 +400,12 @@
 	});
 </script>
 
-	
-	
-	
-	
 </html>	
 	
+<?php
+		}
+?>
+
 	
 	
 	
