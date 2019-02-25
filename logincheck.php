@@ -1,7 +1,7 @@
 <?php
 
 	session_start();
-	include("..\database\database.php");
+	include("database\database.php");
 
 	if( isset($_POST["login"])) {
 		$user = mysqli_real_escape_string($conn,$_POST["username"]);
@@ -22,7 +22,7 @@
 					$_SESSION["id"] = $row["id"];
 					/* print_r($_SESSION["id"]); */
 					/* exit(); */
-					header("location:home.php");
+					header("location:home\home.php");
 				}
 				if( $hashpwdcheck == false ){
 					header("location:index.php?notmatching");

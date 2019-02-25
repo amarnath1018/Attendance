@@ -1,9 +1,7 @@
 <?php
 	session_start();
 	if( isset($_SESSION["id"]) ){
-?>
 
-<?php
 	include("..\layout\header.php");
 	
 	if(isset($_POST["save"])){
@@ -41,19 +39,20 @@
 								$result = mysqli_query($conn,$sql);
 								if( mysqli_num_rows($result) > 0 ){
 									while( $row=mysqli_fetch_assoc($result) ){
-										echo '<div class="border-bottom mb-3">
-												<a href="..\edit\editTitle.php?edit='.$row["id"].'" name="edit" id="editTitle" class="btn btn-primary btn-sm float-right ml-2">
+							?>
+										<div class="border-bottom mb-3">
+												<a href="#" name="edit" id="editTitle" class="btn btn-primary btn-sm float-right ml-2">
 													<li class="far fa-edit"></li>
-												</button>
-												<a href="..\delete\deleteTitle.php?delete='.$row["id"].'"  name="delete" class="btn btn-danger btn-sm float-right">
+												</a>
+												<a href="..\delete\deleteTitle.php?delete=<?=$row["id"]?>"  name="delete" class="btn btn-danger btn-sm float-right">
 													<li class="far fa-trash-alt"></li>
 												</a>
-												<b>'.$row["title"].'</b><br/>
-												<small>'.$row["description"].'</small>
-											</div>';
-									}
+												<b><?=$row["title"]?></b><br/>
+												<small><?=$row["description"]?></small>
+											</div>
+								<?php	}
 								}
-							?>
+								?>
 						</div>
 					</div>
 					
@@ -89,7 +88,6 @@
 		</div>
 	</body>
 	
-<script src="..\js\jquery.js"></script>
 <script>
 	$("#addTitle").hide();
 	$("#backBtn").click(()=>{

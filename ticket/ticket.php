@@ -1,8 +1,7 @@
 <?php
 	session_start();
 	if( isset($_SESSION["id"]) ){
-?>
-<?php
+
 	include("..\layout\header.php");
 	
 	if(isset($_POST["saveTcktBtn"])){
@@ -13,7 +12,13 @@
 		$mob = mysqli_real_escape_string($conn,$_POST["mob"]);
 		$dept = mysqli_real_escape_string($conn,$_POST["dept"]);
 		$priority = mysqli_real_escape_string($conn,$_POST["priority"]);
-		$date = date("d-m-Y");
+		$date = date("d-m-Y H:i:sa");
+		
+		// $file = $_FILES["file"];
+		// $filename = $file["name"];
+		
+		// print_r($file);
+		// exit();
 
 		if(isset($_POST["status"])){
 			$status = mysqli_real_escape_string($conn,$_POST["status"]);			
@@ -52,9 +57,11 @@
 ?>
 
 
-					
+				<div class="col-md-10 bg-light p-3 " style="height:calc(100vh)">
+				
+				
 					<div class="bg-white" id="ticketList">
-						<div class="p-3 border-bottom">
+						<div class="border-bottom p-3">
 							<header>
 								<div>
 									<button class="btn btn-success btn-sm float-right" id="addTcktBtn">
@@ -64,41 +71,59 @@
 								</div>
 							</header>
 						</div>
-						<div class="" id="">
+						<div class="bg-white p-3">
 							<?php
 								$sql = "SELECT * FROM ticketinfo";
 								$result = mysqli_query($conn,$sql);
 								if( mysqli_num_rows($result) > 0 ){
 									while( $row = mysqli_fetch_assoc($result) ){
-
-										echo '<div class="card">
-												<div class="row card-hdr">
-													<div class="col-md-4 card-left">
-														<span>#3</span>
-													</div>
-													<div class="col-md-8 card-right">
-														<span>Date 21-12-2019</span>
-													</div>
-												<div>
-												<div class="row card-body">
-													<div class="col-md-6 flex">
-														<div class="card-img">
-															<li class="far fa-user"></li>
-														</div>
-														<div class="card-text">
-															<span>Amarnath</span><br>
-															<span>Amarnath</span><br>
-															<span>Amarnath</span><br>
-														</div>
-													</div>
-													<div class="col-md-6">
-													</div>
-													</div>
+							?>
+								<div class="border p-2 my-2">
+									<div class="row mb-3">
+										<div class="col-md-4">
+											<span class="ml-3">#<?=$row["id"]?></span>
+										</div>
+										<div class="col-md-8 ">
+											<span class="card-text float-right">Created Date-<?=$row["date"]?></span>
+										</div>
+									</div>
+									<div class="row mb-3">
+										<div class="col-md-6">
+											<div class="row">
+												<div class="col-md-2">
+													<li class="far fa-user fa-4x"></li>
 												</div>
-											</div>';
-									}
+												<div class="col-md-5">
+													<span><?=$row["name"]?></span><br/>
+													<span>Departmant-<?=$row["dept"]?></span><br/>
+													<span>Priority-<?=$row["priority"]?></span>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<span class="text-muted">Subject</span><br/>
+											<span class=""><?=$row["subject"]?></span>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-4">
+											<small class="card-text border rounded p-1">Updated Date-<?=$row["date"]?></small>
+										</div>
+										<div class="col-md-8">
+											<a href="#" class="btn btn-primary btn-sm float-right ml-2" name="delete">
+												<li class="far fa-edit "></li>
+											</a>
+											<a href="..\delete\deleteTicket.php?delete=<?=$row["id"]?>" class="btn btn-danger btn-sm float-right">
+												<li class="fas fa-trash-alt"></li>
+											</a>
+										</div>
+									</div>
+								</div>
+										
+								<?php	}
 								}
 							?>
+							
 						</div>
 					</div>
 					<form action="ticket.php" method="post" >
@@ -149,8 +174,6 @@
 			</div>
 		</div>
 	</body>	
-	
-<script src="..\js\jquery.js"></script>
 <script>
 	$("#addTicket").hide();
 	
@@ -184,7 +207,7 @@
 							"label" : "Attachments",
 							"type" : "file",
 							"icon" : "",
-							"placeholder" : "Choose File",
+							"placeholder" : "",
 							"name" : "file"
 							
 						},

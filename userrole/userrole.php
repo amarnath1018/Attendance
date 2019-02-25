@@ -1,10 +1,7 @@
 <?php
 	session_start();
 	if( isset($_SESSION["id"])){
-?>
 
-<?php
-	
 	include("..\layout\header.php");
 
 	if(isset($_POST["saveRoleBtn"])){
@@ -12,7 +9,7 @@
 		$description = mysqli_real_escape_string($conn,$_POST["textarea"]);
 		$currentDate = date("d-m-Y");
 		
-		if(!empty($role) && !empty($description) ){
+		if( !empty($role) && !empty($description) ){
 			if(preg_match("/^[a-zA-Z]*$/",$role)){
 				$sql = "INSERT INTO userroles(r_name,r_des,date) VALUES('$role','$description','$currentDate');";
 				$result = mysqli_query($conn,$sql);
@@ -60,23 +57,23 @@
 										$result = mysqli_query($conn,$sql);
 										if( mysqli_num_rows($result) > 0 ){
 											while( $row = mysqli_fetch_assoc($result) ){
-												echo '<tr>
-														<td>'.$row["id"].'</td>
-														<td>'.$row["r_name"].'</td>
-														<td>'.$row["r_des"].'</td>
-														<td>'.$row["date"].'</td>
-														<td>
-															<button class="btn btn-primary btn-sm">
-																<li class="far fa-edit"></li>
-															</button>'.' '.'
-															<a href="..\delete\deleteUserrole.php?delete='.$row["id"].'" name="delete" class="btn btn-danger btn-sm">
-																<li class="far fa-trash-alt"></li>
-															</a>
-														</td>
-													</tr>';
-											}
-										}
 									?>
+												<tr>
+													<td><?=$row["id"]?></td>
+													<td><?=$row["r_name"]?></td>
+													<td><?=$row["r_des"]?></td>
+													<td><?=$row["date"]?></td>
+													<td>
+														<button class="btn btn-primary btn-sm">
+															<li class="far fa-edit"></li>
+														</button>
+														<a href="..\delete\deleteUserrole.php?delete=<?=$row["id"]?>" name="delete" class="btn btn-danger btn-sm">
+															<li class="far fa-trash-alt"></li>
+														</a>
+													</td>
+												</tr>
+										<?php	}
+										} ?>
 								</tbody>
 							</table>
 						</div>
@@ -129,7 +126,6 @@
 		
 	</body>
 
-<script src="..\js\jquery.js"></script>
 <script>
 	$("#addRole").hide();
 	
@@ -394,21 +390,11 @@
 		console.log(table);
 					
 	$("#innerTbody").html(table);*/
-	
-	
-	
-	});
-</script>
 
+});
+</script>
 </html>	
 	
 <?php
 		}
 ?>
-
-	
-	
-	
-	
-	
-	

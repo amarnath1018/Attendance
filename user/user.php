@@ -1,9 +1,7 @@
 <?php
 	session_start();
 	if( isset($_SESSION["id"])){
-?>
-<?php
-	
+
 	include("..\layout\header.php");
 	
 	if(isset($_POST["save"])){
@@ -91,31 +89,29 @@
 										$resultCheck = mysqli_num_rows($result);
 										if( $resultCheck > 0 ){
 											while($row = mysqli_fetch_assoc($result)){
-												echo '<tr>
-														<td>'.$row["id"].'</td>
+									?>
+												<tr>
+														<td><?=$row["id"]?></td>
 														<td>
-															<b>'.$row["empFn"].' '.$row["empLn"].'</b><br/>
-															<small>'.$row["empOfficialmail"].'</small><br/>
-															<small>'.$row["empMob"].'</small>
+															<b><?=$row["empFn"]?><?=$row["empLn"]?></b><br/>
+															<small><?=$row["empOfficialmail"]?></small><br/>
+															<small><?=$row["empMob"]?></small>
 														</td>
-														<td>'.$row["empName"].'</td>
-														<td>'.$row["empRole"].'</td>
-														<td><button class="btn btn-success btn-sm">'.$row["empStatus"].'</button></td>
-														<td>'.$row["date"].'</td>
+														<td><?=$row["empName"]?></td>
+														<td><?=$row["empRole"]?></td>
+														<td><button class="btn btn-success btn-sm"><?=$row["empStatus"]?></button></td>
+														<td><?=$row["date"]?></td>
 														<td>
 															<button class="btn btn-primary btn-sm">
 																<li class="far fa-edit"></li>
-															</button>'.' '.'
-															<a href="..\delete\deleteUser.php?delete='.$row["id"].'" name="delete" class="btn btn-danger btn-sm">
+															</button>
+															<a href="..\delete\deleteUser.php?delete=<?=$row["id"]?>" name="delete" class="btn btn-danger btn-sm">
 																<li class="far fa-trash-alt"></li>
 															</a>
 														</td>
-													</tr>';
-											}
-										}
-//exit();
-//echo $mail ;
-									?>
+													</tr>
+									<?php		}
+										} ?>
 								</tbody>
 							</table>
 						</div>
@@ -155,8 +151,7 @@
 		</div>
 		
 	</body>
-	
-<script src="..\js\jquery.js"></script>
+
 <script>
 	$("#adduser").hide();
 		

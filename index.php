@@ -1,5 +1,5 @@
 <?php
-	include("..\database\database.php");
+	include("database\database.php");
 	
 	if(isset($_POST["signup"])){
 		
@@ -70,7 +70,7 @@
 	
 	
 	
-<script src="..\js\jquery.js"></script>
+<script src="js\jquery.js"></script>
 <script>
 	
 	var field = [	
