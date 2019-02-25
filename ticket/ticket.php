@@ -2,7 +2,7 @@
 	session_start();
 	if( isset($_SESSION["id"]) ){
 
-	include("..\layout\header.php");
+	include("../layout/header.php");
 	
 	if(isset($_POST["saveTcktBtn"])){
 		$sub = mysqli_real_escape_string($conn,$_POST["subject"]);
@@ -113,7 +113,7 @@
 											<a href="#" class="btn btn-primary btn-sm float-right ml-2" name="delete">
 												<li class="far fa-edit "></li>
 											</a>
-											<a href="..\delete\deleteTicket.php?delete=<?=$row["id"]?>" class="btn btn-danger btn-sm float-right">
+											<a href="../delete/deleteTicket.php?delete=<?=$row["id"]?>" class="btn btn-danger btn-sm float-right">
 												<li class="fas fa-trash-alt"></li>
 											</a>
 										</div>

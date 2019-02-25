@@ -1,7 +1,7 @@
 <?php
 
 	session_start();
-	include("database\database.php");
+	include("database/database.php");
 
 	if( isset($_POST["login"])) {
 		$user = mysqli_real_escape_string($conn,$_POST["username"]);

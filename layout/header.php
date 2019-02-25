@@ -1,5 +1,5 @@
 <?
-	include("..\database\database.php");
+	include("../database/database.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,7 +28,7 @@
 				<li class="fas fa-user-check"></li>
 			  </button>
 			  <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
-				<a class="dropdown-item " href="..\logout.php">Logout</a>
+				<a class="dropdown-item " href="../logout.php">Logout</a>
 			  </div>
 			</div>	
 		</div>
@@ -37,10 +37,10 @@
 			<div class="row">
 				<div class="col-md-2 border bg-dark">
 					<div id="list-example" class="list-group mt-3">
-					  <a class="list-group-item list-group-item-action" href="..\home\home.php">Home</a>
-					  <a class="list-group-item list-group-item-action" href="..\user\user.php">User</a>
-					  <a class="list-group-item list-group-item-action" href="..\userrole\userrole.php">User Role</a>
-					  <a class="list-group-item list-group-item-action" href="..\ticket\ticket.php">Ticket</a>
+					  <a class="list-group-item list-group-item-action" href="../home/home.php">Home</a>
+					  <a class="list-group-item list-group-item-action" href="../user/user.php">User</a>
+					  <a class="list-group-item list-group-item-action" href="../userrole/userrole.php">User Role</a>
+					  <a class="list-group-item list-group-item-action" href="../ticket/ticket.php">Ticket</a>
 					</div>
 				</div>
 

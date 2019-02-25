@@ -67,7 +67,7 @@
 														<button class="btn btn-primary btn-sm">
 															<li class="far fa-edit"></li>
 														</button>
-														<a href="..\delete\deleteUserrole.php?delete=<?=$row["id"]?>" name="delete" class="btn btn-danger btn-sm">
+														<a href="../delete/deleteUserrole.php?delete=<?=$row["id"]?>" name="delete" class="btn btn-danger btn-sm">
 															<li class="far fa-trash-alt"></li>
 														</a>
 													</td>

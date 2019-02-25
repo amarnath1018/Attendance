@@ -2,7 +2,7 @@
 	session_start();
 	if( isset($_SESSION["id"]) ){
 
-	include("..\layout\header.php");
+	include("../layout/header.php");
 	
 	if(isset($_POST["save"])){
 		$title = mysqli_real_escape_string($conn,$_POST["Title"]);
@@ -44,7 +44,7 @@
 												<a href="#" name="edit" id="editTitle" class="btn btn-primary btn-sm float-right ml-2">
 													<li class="far fa-edit"></li>
 												</a>
-												<a href="..\delete\deleteTitle.php?delete=<?=$row["id"]?>"  name="delete" class="btn btn-danger btn-sm float-right">
+												<a href="../delete/deleteTitle.php?delete=<?=$row["id"]?>"  name="delete" class="btn btn-danger btn-sm float-right">
 													<li class="far fa-trash-alt"></li>
 												</a>
 												<b><?=$row["title"]?></b><br/>
