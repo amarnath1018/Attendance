@@ -88,9 +88,12 @@
 										$result = mysqli_query($conn,$sql);
 										$resultCheck = mysqli_num_rows($result);
 										if( $resultCheck > 0 ){
+											
+											// $color = "btn btn-danger btn-sm";
+										
 											while($row = mysqli_fetch_assoc($result)){
 									?>
-												<tr>
+													<tr>
 														<td><?=$row["id"]?></td>
 														<td>
 															<b><?=$row["empFn"]?><?=$row["empLn"]?></b><br/>
@@ -99,7 +102,7 @@
 														</td>
 														<td><?=$row["empName"]?></td>
 														<td><?=$row["empRole"]?></td>
-														<td><button class="btn btn-success btn-sm"><?=$row["empStatus"]?></button></td>
+														<td><a href="empStatus.php?status=<?=$row["id"]?>" class="btn btn-success btn-sm" ><?=$row["empStatus"]?></a></td>
 														<td><?=$row["date"]?></td>
 														<td>
 															<button class="btn btn-primary btn-sm">

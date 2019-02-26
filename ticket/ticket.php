@@ -57,7 +57,7 @@
 ?>
 
 
-				<div class="col-md-10 bg-light p-3 " style="height:calc(100vh)">
+				<div class="col-md-10 bg-light p-4 " style="height:calc(100vh)">
 				
 				
 					<div class="bg-white" id="ticketList">

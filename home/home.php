@@ -41,13 +41,13 @@
 									while( $row=mysqli_fetch_assoc($result) ){
 							?>
 										<div class="border-bottom mb-3">
-												<a href="#" name="edit" id="editTitle" class="btn btn-primary btn-sm float-right ml-2">
+												<a href="../edit/editTitle.php?edit=<?=$row["id"]?>" name="edit" id="editTitle" class="btn btn-primary btn-sm float-right ml-2">
 													<li class="far fa-edit"></li>
 												</a>
 												<a href="../delete/deleteTitle.php?delete=<?=$row["id"]?>"  name="delete" class="btn btn-danger btn-sm float-right">
 													<li class="far fa-trash-alt"></li>
 												</a>
-												<b><?=$row["title"]?></b><br/>
+												<b><?=$row["title"]?></b></br/>
 												<small><?=$row["description"]?></small>
 											</div>
 								<?php	}
