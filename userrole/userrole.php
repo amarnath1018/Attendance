@@ -9,19 +9,18 @@
 		$description = mysqli_real_escape_string($conn,$_POST["textarea"]);
 		$currentDate = date("d-m-Y");
 		
-		if( !empty($role) && !empty($description) ){
-			if(preg_match("/^[a-zA-Z]*$/",$role)){
-				$sql = "INSERT INTO userroles(r_name,r_des,date) VALUES('$role','$description','$currentDate');";
-				$result = mysqli_query($conn,$sql);
-				header("Refresh:0");
-			}else{
-				header ("location:userrole.php?save=invalidformat");
-			}
+	if( !empty($role) && !empty($description) ){	
+		if( empty($_POST["ID"]) ){
+			$sql = "INSERT INTO userroles(r_name,r_des,date) VALUES('$role','$description','$currentDate');";
+			$result = mysqli_query($conn,$sql);
 		}else{
-			header ("location:userrole.php?save=emptyinput");
+			$sql = "UPDATE userroles SET r_name='$role',r_des='$description',date='$currentDate' WHERE id =".$_POST["ID"]; 
+			$result = mysqli_query($conn,$sql);	
 		}
-		
-		
+		header("Refresh:0");
+		}else{
+			header ("location:userrole.php?cmd=emptyinput");
+		}
 	}
 
 
@@ -40,7 +39,7 @@
 								</div>
 							</header>
 						</div>
-						<div class=" p-3">
+						<div class="p-3">
 							<table class="table table-bordered table-striped">
 								<thead>
 									<tr>
@@ -64,7 +63,7 @@
 													<td><?=$row["r_des"]?></td>
 													<td><?=$row["date"]?></td>
 													<td>
-														<button class="btn btn-primary btn-sm">
+														<button class="btn btn-primary btn-sm editRole" value="<?=$row["id"]?>">
 															<li class="far fa-edit"></li>
 														</button>
 														<a href="../delete/deleteUserrole.php?delete=<?=$row["id"]?>" name="delete" class="btn btn-danger btn-sm">
@@ -111,7 +110,9 @@
 								</div>
 								<div class="p-3 border-top">
 									<footer>
-										<button class="btn btn-primary" name="saveRoleBtn">Save</button>
+										<p class="text-center">
+											<button class="btn btn-success " name="saveRoleBtn">Save</button>
+										</p>
 									</footer>
 								</div>	
 									
@@ -138,36 +139,87 @@
 	$("#addRoleBtn").click(()=>{
 		$("#listRole").hide();
 		$("#addRole").show();
+		displayField();
+	});
+	
+	if( window.location.search == "?cmd=emptyinput" ){
+		$("#listRole").hide();
+		$("#addRole").show();
+		displayField();
+	}
+	
+	$(document).ready( function(){
+		$(".editRole").click( function(){
+			$("#listRole").hide();
+			$("#addRole").show();
+			displayField();
+			$pos = $(this).val();
+			$pos = parseInt($pos);
+			
+			$.ajax({
+				url : "../edit/editRole.php",
+				datatype : "JSON",
+				method : "POST",
+				data : {
+							id : $pos
+						},
+				success : function(response){
+					response = JSON.parse(response);
+					$("#uRole").val(response.role);
+					$("#uDes").val(response.description);
+					$("#id").val(response.id);
+					
+					console.log(response.role);
+				}
+			});
+			
+		});
+	});
+	
+	
+	function displayField(){
 		
 		var field = [
 						{ 	
 							"label" : "User Role Name",
 							"icon" : "fas fa-user-friends",
 							"type" : "text",
-							"name" : "role"
+							"name" : "role",
+							"id" : "uRole",
+							"class" : ""
+						},
+						{ 	
+							"label" : "ID",
+							"icon" : "fas fa-user",
+							"type" : "text",
+							"name" : "ID",
+							"id" : "id",
+							"class" : "d-none"
 						},
 						{ 	
 							"label" : "Description",
 							"icon" : "far fa-comment-alt",
 							"type" : "textarea",
-							"name" : "textarea"
+							"name" : "textarea",
+							"id" : "uDes",
+							"class" : ""
 						}
 					];
 		
-		console.log(field);
+		
 		var data = "";
 		
 		for( i = 0; i < field.length; i++ ){
 			if(field[i].type == 'text'){
-				data += '<h6>'+field[i].label+'</h6>'
-						+ '<div class="form-group">'
+				data += '<h6 class="'+ field[i].class +'">'+field[i].label+'</h6>'
+						+ '<div class="form-group '+ field[i].class +'">'
 							+ '<div class="input-group">'
 								+ '<div class="input-group-prepend">'
 									+ '<span class="input-group-text">'
 										+ '<li class="'+field[i].icon+'"></li>'
 									+ '</span>'
 								+'</div>'
-								+'<input class="form-control" name="'+field[i].name+'" type="'+field[i].type+'" >'
+								+'<input class="form-control" name="'+ field[i].name +'" type="'+field[i].type+'" id="'+ field[i].id +'" >'
 							+'</div>'
 						+'</div>';
 			}
@@ -180,16 +232,14 @@
 										+ '<li class="'+field[i].icon+'"></li>'
 									+ '</span>'
 								+'</div>'
-								+'<textarea class="form-control" rows="5" name="'+field[i].name+'" type="'+field[i].type+'" ></textarea>'
+								+'<textarea class="form-control" rows="5" name="'+ field[i].name +'" type="'+field[i].type+' "id="'+ field[i].id +'" ></textarea>'
 							+'</div>'
 						+'</div>';
 			}
-		}
-		
-		
-		
+		}	
 		
 		$("#uRoleInputs").html(data);
+	}
 		
 		
 		
@@ -391,7 +441,6 @@
 					
 	$("#innerTbody").html(table);*/
 
-});
 </script>
 </html>	
 	

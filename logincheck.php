@@ -7,8 +7,6 @@
 		$user = mysqli_real_escape_string($conn,$_POST["username"]);
 		$pwd = mysqli_real_escape_string($conn,$_POST["pwd"]);
 
-		/* echo $user; 
-		 exit(); */
 
 		if( !empty($user) && !empty($pwd)){
 			$sql = "SELECT * FROM admin WHERE username = '$user'";			
@@ -20,21 +18,18 @@
 				$hashpwdcheck = password_verify($pwd, $row["password"]);
 				if( $hashpwdcheck == true ) {
 					$_SESSION["id"] = $row["id"];
-					/* print_r($_SESSION["id"]); */
-					/* exit(); */
-					header("location:home\home.php");
+					
+					header("location:home/home.php");
 				}
 				if( $hashpwdcheck == false ){
-					header("location:index.php?notmatching");
+					header("location:index.php?cmd=notmatching");
 				}
 			}else{
-				header("location:index.php?Nouser");
+				header("location:index.php?cmd=Nouser");
 			}
 			
-			
-			
 		}else{
-			header("location:index.php?emptyinput");
+			header("location:index.php?cmd=emptyinput");
 		}
 	}else{
 		echo "something wrong";

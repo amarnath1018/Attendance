@@ -20,21 +20,21 @@
 	</head>
 	<body>
 		<div class="nav p-2 justify-content-end border">
-			<li class="nav-item ">
+			<!--<li class="nav-item ">
 				<a class="nav-link fas fa-cog " href="#"></a>
-			</li>
+			</li>-->
 			<div class="dropdown">
 			  <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<li class="fas fa-user-check"></li>
 			  </button>
 			  <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
-				<a class="dropdown-item " href="../logout.php">Logout</a>
+				<a class="dropdown-item" href="../logout.php">Logout</a>
 			  </div>
 			</div>	
 		</div>
 		
 		<div class="container-fluid">
-			<div class="row">
+				<div class="row">
 				<div class="col-md-2 border bg-dark">
 					<div id="list-example" class="list-group mt-3">
 					  <a class="list-group-item list-group-item-action" href="../home/home.php">Home</a>

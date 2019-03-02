@@ -17,7 +17,7 @@
 				$result = mysqli_query($conn,$sql);
 				header("refresh:0");
 			}else{
-				header("location:index.php?invalidchar");
+				header("location:index.php?cmd=invalidchar");
 			}
 		}else{			
 			header("location:index.php?cmd=emptyinputs");
@@ -33,7 +33,6 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-		
 	</head>
 	<body>
 		<div class="container-fluid bg-dark" style="height:calc(100vh)">
@@ -54,13 +53,15 @@
 				
 				<div class="col-md-5 col-sm-5 m-auto p-3 bg-light border rounded " id="signuppage">
 					<form action="index.php" method="post">
+
 						<div id="signup_input">
 						
 						</div>
-						<button class="btn btn-secondary mt-4" type="button" name="back" id="backBtn" >
+						<p id="signupError" class="text-danger text-center"></p>
+						<button class="btn btn-primary mt-4" type="submit" name="signup" >Signup </button>
+						<button class="btn btn-secondary mt-4 float-right" type="button" name="back" id="backBtn" >
 							<li class="fas fa-angle-left"></li>Back 
 						</button>
-						<button class="btn btn-secondary float-right mt-4" type="submit" name="signup" >Signup </button>
 					</form>
 				</div>
 				
@@ -72,6 +73,7 @@
 	
 <script src="js/jquery.js"></script>
 <script>
+	$("#signuppage").hide();
 	
 	var field = [	
 					{
@@ -89,7 +91,7 @@
 						"name" : "pwd",
 						"placeholder" : "Password",
 						"id" : "pass"
-					},
+					}
 					
 				];
 	
@@ -111,12 +113,9 @@
 	}
 	
 	$("#login_input").html(inputs);
-	
-	$("#signuppage").hide();
-	$("#signup").click(()=>{
-		$("#loginpage").hide();
-		$("#signuppage").show();
 		
+	
+	function displaysignupField(){
 		
 		var signupField = [
 							{
@@ -149,42 +148,62 @@
 								"type" : "password",
 								"name" : "password",
 								"placeholder" : "Password",
-								"id" : "user_name"
+								"id" : "user_pass"
 							}
 						];
-		
-		console.log(signupField);
-		
-	var singnupInputs = "";
-	for( i = 0 ; i < signupField.length; i++){
-		singnupInputs += '<div>'
-							+ '<label class="form-text" for="'+ signupField[i].id+'">'+ signupField[i].heading +'</label>'
-							+ '<div class="form-group">'
-								+ '<div class="input-group">'
-									+ '<div class="input-group-prepend">'
-										+ '<span class="input-group-text"><li class="'+ signupField[i].icon+'"></li></span>'
+
+		var singnupInputs = "";
+		for( i = 0 ; i < signupField.length; i++){
+			singnupInputs += '<div>'
+								+ '<label class="form-text" for="'+ signupField[i].id+'">'+ signupField[i].heading +'</label>'
+								+ '<div class="form-group">'
+									+ '<div class="input-group">'
+										+ '<div class="input-group-prepend">'
+											+ '<span class="input-group-text"><li class="'+ signupField[i].icon+'"></li></span>'
+										+ '</div>'
+										+ '<input type="'+ signupField[i].type +'" class="form-control" name="'+ signupField[i].name +'" placeholder="'
+														+ signupField[i].placeholder +'"id="'+signupField[i].id+'">'
 									+ '</div>'
-									+ '<input type="'+ signupField[i].type +'" class="form-control" name="'+ signupField[i].name +'" placeholder="'
-													+ signupField[i].placeholder +'"id="'+signupField[i].id+'">'
 								+ '</div>'
-							+ '</div>'
-						'</div>'
+							'</div>'
+		}
+		
+		$("#signup_input").html(singnupInputs);
 	}
-		
-		
-	$("#signup_input").html(singnupInputs);
 	
-});
+	$firstname = $("#user_first").val();
+	$lastname = $("#user_last").val();
+	$username = $("#user_name").val();
+	$pwd = $("#user_pass").val();
 	
-$("#backBtn").click(()=>{
-	$("#loginpage").show();
-	$("#signuppage").hide();
-});	
-
-console.log("test");
-
+	
+	$("#signup").click(()=>{
+		$("#loginpage").hide();
+		$("#signuppage").show();
+		displaysignupField();
+	});
+	
+	$("#backBtn").click(()=>{
+		$("#loginpage").show();
+		$("#signuppage").hide();
+	});	
+	
+	$("#user_first,#user_last,#user_name,#user_pass").removeClass("border-danger");
+	if( window.location.search == "?cmd=emptyinputs" ){
+		$("#loginpage").hide();
+		$("#signuppage").show();
+		displaysignupField();
+		$("#signupError").html("Inputs are Empty");
+		$("#user_first,#user_last,#user_name,#user_pass").addClass("border-danger");
+	}
+	if( window.location.search == "?cmd=invalidchar" ){
+		$("#loginpage").hide();
+		$("#signuppage").show();
+		displaysignupField();
+		$("#signupError").html("dont use numbers or any special characters");
+		$("#user_first,#user_last,#user_name").addClass("border-danger");
+	}
 
 </script>
-
 </html>
 

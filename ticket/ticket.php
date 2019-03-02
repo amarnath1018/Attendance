@@ -14,14 +14,9 @@
 		$priority = mysqli_real_escape_string($conn,$_POST["priority"]);
 		$date = date("d-m-Y H:i:sa");
 		
-		// $file = $_FILES["file"];
-		// $filename = $file["name"];
 		
-		// print_r($file);
-		// exit();
-
 		if(isset($_POST["status"])){
-			$status = mysqli_real_escape_string($conn,$_POST["status"]);			
+			$status = $_POST["status"];			
 		}else{
 			$status = "";
 		}
@@ -31,24 +26,31 @@
 			if( preg_match("/^[a-zA-Z]*$/",$name) && preg_match("/^[a-zA-Z]*$/",$sub) ){
 				if( filter_var($mail,FILTER_VALIDATE_EMAIL) ){
 					if( preg_match("/^[0-9]{10}+$/",$mob) ){
+							
+						if( empty($_POST["id"]) ){
+							$sql = "INSERT INTO ticketinfo(subject,reply,name,mail,mob,dept,priority,status,date)
+											VALUES('$sub','$reply','$name','$mail','$mob','$dept','$priority','$status','$date');";
+							
+							$result = mysqli_query($conn,$sql);
+						}else{
+							$sql = "UPDATE ticketinfo SET subject='$sub',reply='$reply',name='$name',mail='$mail',mob='$mob',dept='$dept',priority='$priority',date='$date'
+												WHERE id =".$_POST["id"]; 
+							$result = mysqli_query($conn,$sql);	
+						}
 						
-						$sql = "INSERT INTO ticketinfo(subject,reply,name,mail,mob,dept,priority,status,date)
-										VALUES('$sub','$reply','$name','$mail','$mob','$dept','$priority','$status','$date');";
-						
-						$result = mysqli_query($conn,$sql);
 						header("Refresh:0");
 						
 					}else{
-						header("location:ticket.php?invalidMob");
+						header("location:ticket.php?cmd=invalidMob");
 					}
 				}else{
-					header("location:ticket.php?invalidMail");
+					header("location:ticket.php?cmd=invalidMail");
 				}
 			}else{
-				header("location:ticket.php?invalidChar");
+				header("location:ticket.php?cmd=invalidChar");
 			}
 		}else{
-			header("location:ticket.php?emptyinput");
+			header("location:ticket.php?cmd=emptyinput");
 		}
 		
 	}
@@ -110,17 +112,18 @@
 											<small class="card-text border rounded p-1">Updated Date-<?=$row["date"]?></small>
 										</div>
 										<div class="col-md-8">
-											<a href="#" class="btn btn-primary btn-sm float-right ml-2" name="delete">
-												<li class="far fa-edit "></li>
-											</a>
 											<a href="../delete/deleteTicket.php?delete=<?=$row["id"]?>" class="btn btn-danger btn-sm float-right">
 												<li class="fas fa-trash-alt"></li>
 											</a>
+											<button class="btn btn-primary btn-sm float-right mr-2 editBtn" value="<?=$row["id"]?>">
+												<li class="far fa-edit "></li>
+											</button>
 										</div>
 									</div>
 								</div>
 										
-								<?php	}
+								<?php	
+									}
 								}
 							?>
 							
@@ -148,7 +151,9 @@
 									</div>
 									<div class="p-2 ">
 										<footer>
-											<button class="btn btn-success" name="saveTcktBtn" type="submit">Save</button>
+											<p class="text-center">
+												<button class="btn btn-success" name="saveTcktBtn" type="submit">Save</button>
+											</p>
 										</footer>
 									</div> 
 								</div>
@@ -185,14 +190,72 @@
 	$("#addTcktBtn").click(()=>{
 		$("#ticketList").hide();
 		$("#addTicket").show();
+		displayField();
+	});	
+	
+	if( window.location.search == "?cmd=invalidMob" || window.location.search == "?cmd=invalidChar" || window.location.search == "?cmd=invalidMail" 
+																			|| window.location.search=="?cmd=emptyinput"){
+		$("#ticketList").hide();
+		$("#addTicket").show();
+		displayField();
+	}
+	
+	$(document).ready(function(){
+		$(".editBtn").click(function(){
+			$("#ticketList").hide();
+			$("#addTicket").show();
+			displayField();
+			$pos = $(this).val();
+			$pos = parseInt($pos);
+			
+			$.ajax({
+				url : "../edit/editTicket.php",
+				datatype : "JSON",
+				method : "POST",
+				data : {
+							id : $pos
+						},
+				success : function(response){
+					response = JSON.parse(response);
+					$("#uId").val(response.id);
+					$("#uSubject").val(response.subject);
+					$("#uComment").val(response.reply);
+					$("#uName").val(response.name);
+					$("#uMail").val(response.mail);
+					$("#uMob").val(response.mob);
+					$("#uDept").val(response.dept);
+					$("#uPriority").val(response.priority);
+					// $("#uFile").val(response.id);
+					// $("#uStatus").val(response.status);
+					
+					console.log(response.id);
+					
+				}
+			});
+		});
+	});
+	
+	function displayField(){
 		
 		var field = [
+						{
+							"label" : "id",
+							"type" : "text",
+							"icon" : "far fa-user",
+							"placeholder" : "ID",
+							"name" : "id",
+							"id" : "uId",
+							"class" : "d-none"
+							
+						},
 						{
 							"label" : "Subject",
 							"type" : "text",
 							"icon" : "far fa-user",
 							"placeholder" : "Subject",
-							"name" : "subject"
+							"name" : "subject",
+							"id" : "uSubject",
+							"class" : ""
 							
 						},
 						{
@@ -200,7 +263,9 @@
 							"type" : "textarea",
 							"icon" : "",
 							"placeholder" : "",
-							"name" : "comment"
+							"name" : "comment",
+							"id" : "uComment",
+							"class" : ""
 							
 						},
 						{
@@ -208,7 +273,9 @@
 							"type" : "file",
 							"icon" : "",
 							"placeholder" : "",
-							"name" : "file"
+							"name" : "file",
+							"id" : "uFile",
+							"class" : ""
 							
 						},
 						{
@@ -217,7 +284,9 @@
 							"icon" : "",
 							"placeholder" : "",
 							"name" : "status",
-							"value" : "close on reply"
+							"value" : "close on reply",
+							"id" : "uStatus",
+							"class" : ""
 							
 						}
 					];
@@ -227,13 +296,14 @@
 	for( i = 0; i < field.length; i++){
 		if( field[i].type == 'text' ){
 			data += '<div>'
-						+ '<h6>'+ field[i].label +'</h6>'
-						+ '<div class="form-group">'
+						+ '<h6 class="'+field[i].class+'">'+ field[i].label +'</h6>'
+						+ '<div class="form-group '+ field[i].class +'">'
 							+ '<div class="input-group">'
 								+ '<div class="input-group-prepend">'
 									+ '<span class="input-group-text"><li class="'+field[i].icon+'"></li></span>'
 								+ '</div>'
-								+ '<input type="'+ field[i].type+'" class="form-control" name="'+field[i].name+'" placeholder="'+field[i].placeholder+'">'
+								+ '<input type="'+ field[i].type+'" class="form-control" name="'+field[i].name
+										+'" placeholder="'+field[i].placeholder+'"id="'+ field[i].id +'">'
 							+ '</div>'
 						+ '</div>'
 					+ '</div>'
@@ -243,10 +313,12 @@
 						+ '<h6>'+ field[i].label +'</h6>'
 						+ '<div class="form-group">'
 							+ '<div class="input-group">'
-								+ '<textarea type="'+ field[i].type+'" class="form-control" rows="10" name="'+field[i].name+'" placeholder="'+field[i].placeholder+'"></textarea>'
+								+ '<textarea type="'+ field[i].type+'" class="form-control" rows="10" name="'+field[i].name
+														+'" placeholder="'+field[i].placeholder+'" id="'+ field[i].id +'"></textarea>'
 							+ '</div>'
 						+ '</div>'
 					+ '</div>'
+					
 		}
 		if( field[i].type == 'file' ){
 			data += '<div>'
@@ -254,7 +326,8 @@
 						+ '<div class="form-group">'
 							+ '<div class="input-group">'
 								+ '<div class="custom-file">'
-									+ '<input type="'+ field[i].type+'" class="custom-file-input" name="'+field[i].name+'" placeholder="'+field[i].placeholder+'">'
+									+ '<input type="'+ field[i].type+'" class="custom-file-input" name="'+field[i].name
+																	+'" placeholder="'+field[i].placeholder+'" id="'+ field[i].id +'">'
 									+ '<label class="custom-file-label">Choose file</label>'
 								+ '</div>'
 							+ '</div>'
@@ -266,7 +339,8 @@
 						+ '<h6>'+ field[i].label +'</h6>'
 						+ '<div class="form-group">'
 							+ '<div class="checkbox">'
-								+ '<label><input type="'+ field[i].type+'" name="'+field[i].name+'" value="'+field[i].value+'"class="mr-2">Close on reply</label>'
+								+ '<label><input type="'+ field[i].type+'" name="'+field[i].name+'" value="'+field[i].value+'"class="mr-2" id="'
+											+ field[i].id +'">Close on reply</label>'
 							+ '</div>'
 						+ '</div>'
 					+ '</div>'
@@ -282,27 +356,35 @@
 							"type" : "text",
 							"icon" : "far fa-user",
 							"name" : "user",
-							"placeholder" : "Name"
+							"placeholder" : "Name",
+							"id" : "uName",
+							"class" : ""
 						},
 						{
 							"label" : "Email Address",
 							"type" : "text",
 							"icon" : "far fa-envelope",
 							"name" : "mail",
-							"placeholder" : "Email Address"
+							"placeholder" : "Email Address",
+							"id" : "uMail",
+							"class" : ""
 						},
 						{
 							"label" : "Mobile Number",
 							"type" : "text",
 							"icon" : "fas fa-phone",
 							"name" : "mob",
-							"placeholder" : "Mobile Number"
+							"placeholder" : "Mobile Number",
+							"id" : "uMob",
+							"class" : ""
 						},
 						{
 							"label" : "Department",
 							"type" : "select",
 							"icon" : "far fa-user",
 							"name" : "dept",
+							"id" : "uDept",
+							"class" : "",
 							"placeholder" : "",
 							"option" :[
 										{
@@ -320,6 +402,8 @@
 							"type" : "select",
 							"icon" : "far fa-user",
 							"name" : "priority",
+							"id" : "uPriority",
+							"class" : "",	
 							"placeholder" : "",
 							"option" :[
 										{
@@ -349,13 +433,14 @@
 									+ '<div class="input-group-prepend">'
 										+ '<span class="input-group-text "><li class="'+infoField[i].icon+'"></span>'
 									+ '</div>'
-									+ '<input class="form-control" type="'+infoField[i].type+'" name="'+infoField[i].name+'" Placeholder="'+infoField[i].placeholder+'">'
+									+ '<input class="form-control" type="'+infoField[i].type+'" name="'+infoField[i].name
+											+'" Placeholder="'+infoField[i].placeholder+'" id="'+ infoField[i].id +'">'
 								+ '</div>'
 							+ '</div>'	
 						+ '</div>'
 		}
 		if( infoField[i].type == 'select' ){
-			var selectInfo = '<select class="form-control" type="'+ infoField[i].type +'" name="'+ infoField[i].name +'">';
+			var selectInfo = '<select class="form-control" type="'+ infoField[i].type +'" name="'+ infoField[i].name +'" id="'+ infoField[i].id +'">';
 			for( var j = 0; j < infoField[i].option.length; j++){
 				selectInfo += '<option value="'+ infoField[i].option[j].value +'">'
 									+ infoField[i].option[j].labelName 
@@ -378,7 +463,7 @@
 	}
 					
 	$("#ticInfo").html(infoData);
-});	
+}
 
 </script>
 </html>
